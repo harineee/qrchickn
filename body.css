@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #fc0303;
+    background-color: #f4f9f9;
     color: #333;
     margin: 0;
     padding: 20px;
@@ -16,9 +16,14 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-h1, h2 {
+h1 {
     text-align: center;
-    color: #4A90E2;
+    color: #4A90E2;}
+    
+
+h2 {
+    text-align: center;
+    color: #fc0303;
 }
 
 h3 {
