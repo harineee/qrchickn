@@ -6,7 +6,7 @@
     <title>QR Code Data List - Severely Spoiled Chicken</title>
     <link rel="stylesheet" href="body.css">
 </head>
-<body>
+<body onload="updateTime()">
     <div class="container">
         <h1>Nutritional Facts</h1>
         <h2>Severely Spoiled Chicken</h2>
@@ -19,6 +19,8 @@
                 <li><strong>Expiration Date:</strong> 2024-08-08</li>
                 <li><strong>Batch Number:</strong> CB-2043X7</li>
                 <li><strong>Supplier Information:</strong> Fresh Farms Poultry, 123 Market St, Springfield, IL</li>
+                <li><strong>Current Time:</strong> <span id="realTime"></span></li>
+                <li><strong>Countdown to Event:</strong> <span id="countdown"></span></li>
             </ul>
         </section>
 
@@ -61,5 +63,40 @@
             </ul>
         </section>
     </div>
+    <script>
+        function updateTime() {
+            const now = new Date();
+            const formattedTime = now.toLocaleString(); // Format
+            document.getElementById('realTime').textContent = formattedTime;
+        }
+
+        setInterval(updateTime, 1000);
+
+        function startCountdown(days) {
+            const now = new Date();
+            const targetDate = new Date();
+            targetDate.setDate(now.getDate() + days);
+
+            const interval = setInterval(() => {
+                const currentTime = new Date();
+                const timeRemaining = targetDate - currentTime;
+
+                if (timeRemaining <= 0) {
+                    clearInterval(interval);
+                    document.getElementById('countdown').textContent = 'Countdown complete!';
+                    return;
+                }
+
+                const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+                document.getElementById('countdown').textContent =
+                    `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            }, 1000);
+        }
+        window.onload = () => startCountdown(10); // Set Days Countdown
+    </script>
 </body>
 </html>
