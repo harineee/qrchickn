@@ -42,4 +42,4 @@ def insert_fake_data(num_records=10):
     conn.close()
     print(f"Inserted {num_records} fake records into the database.")
 
-insert_fake_data(10) # Set Param for how many records to add
+insert_fake_data(80) # Set Param for how many records to add

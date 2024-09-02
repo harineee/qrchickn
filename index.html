@@ -6,7 +6,7 @@
     <title>QR Code Data List - Severely Spoiled Chicken</title>
     <link rel="stylesheet" href="body.css">
 </head>
-<body onload="updateTime()">
+<body onload="initializeCountdown()">
     <div class="container">
         <h1>Nutritional Facts</h1>
         <h2>Severely Spoiled Chicken</h2>
@@ -15,12 +15,12 @@
             <h3>Basic Information</h3>
             <ul>
                 <li><strong>Product Name:</strong> Chicken Breast</li>
-                <li><strong>Packaging Date:</strong> 2024-08-01</li>
-                <li><strong>Expiration Date:</strong> 2024-08-08</li>
+                <li><strong>Packaging Date:</strong> 2024-09-01</li>
+                <li><strong>Expiration Date:</strong> <span id="expirationDate">2024-09-05</span></li>
                 <li><strong>Batch Number:</strong> CB-2043X7</li>
                 <li><strong>Supplier Information:</strong> Fresh Farms Poultry, 123 Market St, Springfield, IL</li>
                 <li><strong>Current Time:</strong> <span id="realTime"></span></li>
-                <li><strong>Countdown to Event:</strong> <span id="countdown"></span></li>
+                <li><strong>Countdown to Expiration:</strong> <span id="countdown"></span></li>
             </ul>
         </section>
 
@@ -70,17 +70,31 @@
             document.getElementById('realTime').textContent = formattedTime;
         }
 
-        setInterval(updateTime, 1000);
+        function initializeCountdown() {
+            updateTime();
+            const expirationDateStr = document.getElementById('expirationDate').textContent;
+            const expirationDate = new Date(expirationDateStr);
 
-        function startCountdown(days) {
             const now = new Date();
-            const targetDate = new Date();
-            targetDate.setDate(now.getDate() + days);
+            let timeRemaining = expirationDate - now;
 
+            const savedExpirationDate = localStorage.getItem('expirationDate');
+            if (!savedExpirationDate || savedExpirationDate !== expirationDateStr) {
+                // If the expiration date has changed or doesn't exist in storage, reset everything
+                localStorage.setItem('expirationDate', expirationDateStr);
+                localStorage.setItem('remainingTime', timeRemaining);
+                localStorage.setItem('lastVisit', now.getTime());
+            } else {
+                const lastVisit = parseInt(localStorage.getItem('lastVisit'), 10);
+                const timeSinceLastVisit = now.getTime() - lastVisit;
+                timeRemaining = parseInt(localStorage.getItem('remainingTime'), 10) - timeSinceLastVisit;
+            }
+
+            startCountdown(timeRemaining);
+        }
+
+        function startCountdown(timeRemaining) {
             const interval = setInterval(() => {
-                const currentTime = new Date();
-                const timeRemaining = targetDate - currentTime;
-
                 if (timeRemaining <= 0) {
                     clearInterval(interval);
                     document.getElementById('countdown').textContent = 'Countdown complete!';
@@ -94,9 +108,13 @@
 
                 document.getElementById('countdown').textContent =
                     `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+                localStorage.setItem('remainingTime', timeRemaining);
+                timeRemaining -= 1000; // Subtract one second
             }, 1000);
         }
-        window.onload = () => startCountdown(10); // Set Days Countdown
+
+        setInterval(updateTime, 1000);
     </script>
 </body>
 </html>
