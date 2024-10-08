@@ -29,7 +29,7 @@ cursor.execute('''
     )
 ''')
 
-# Insert fake data into the products table
+# Insert data into the products table
 cursor.execute('''
     INSERT INTO products (name, packaging_date, expiration_date, batch_number, supplier_info, 
     calories, protein, fat, ingredients, allergens, dietary_suitability, certifications, spoilage_indicator, 
